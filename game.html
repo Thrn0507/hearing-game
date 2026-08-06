@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小象镇听力小医生</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'PingFang SC','Microsoft YaHei',sans-serif;
+  background:linear-gradient(180deg,#E8F5E9,#FFF8E7);
+  min-height:100vh;display:flex;justify-content:center;align-items:center;
+  user-select:none;
+}
+.container{width:100%;max-width:800px;min-height:100vh;position:relative;overflow:hidden;transform:scale(1.2) translateY(-30px);transform-origin:top center}
+.page{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px;animation:fadeIn .5s}
+.page.active{display:flex}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes popIn{0%{transform:scale(0);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+/* 首页 */
+.home-page{background:linear-gradient(180deg,#87CEEB 0%,#B8E4F0 35%,#FFF8E7 70%)}
+.home-doctor{width:200px;animation:float 3s ease-in-out infinite;filter:drop-shadow(0 6px 15px rgba(0,0,0,.15))}
+.home-title{font-size:2em;font-weight:800;color:#5B3A29;margin:10px 0;text-shadow:2px 2px 0 rgba(255,255,255,.6)}
+.home-sub{color:#7B6B5D;font-style:italic;margin-bottom:16px}
+.btn{display:inline-block;padding:14px 48px;font-size:1.15em;font-weight:700;border:none;border-radius:50px;cursor:pointer;transition:all .3s;color:#FFF;letter-spacing:2px;box-shadow:0 4px 15px rgba(0,0,0,.15);font-family:inherit}
+.btn:hover{transform:translateY(-3px);box-shadow:0 6px 25px rgba(0,0,0,.2)}
+.btn:active{transform:translateY(-1px)}
+.btn-primary{background:linear-gradient(135deg,#FF9A56,#FF6B6B);font-size:1.3em;padding:16px 56px;animation:pulse 2s infinite}
+.btn-primary:hover{animation:none}
+.btn-success{background:linear-gradient(135deg,#6BCB77,#4CAF50)}
+.btn-back{background:transparent;color:#7B6B5D;border:2px solid #DDD;padding:8px 20px;font-size:.9em;box-shadow:none}
+
+/* 地图 */
+.map-page{background:linear-gradient(180deg,#4FC3F7,#29B6F6,#0288D1);justify-content:flex-start;padding-top:10px}
+.map-header{width:100%;display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:rgba(255,255,255,.9);border-radius:16px;margin-bottom:8px;box-shadow:0 2px 10px rgba(0,0,0,.08);z-index:10}
+.map-title{font-size:1.2em;font-weight:700;color:#5B3A29}
+.progress{font-size:.9em;color:#7B6B5D;font-weight:600}
+.progress-bar{width:100%;height:8px;background:#E0E0E0;border-radius:4px;margin-top:3px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#6BCB77,#4CAF50);border-radius:4px;transition:width .5s}
+
+.map-area{position:relative;width:100%;max-width:720px;margin:0 auto;aspect-ratio:2278/1280;background:url('地图.jpg') center/contain no-repeat;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.15)}
+.map-house{position:absolute;cursor:pointer;transition:transform .3s;display:flex;flex-direction:column;align-items:center;gap:2px;transform:translate(-50%,-50%)}
+.map-house:hover{transform:translate(-50%,-50%) scale(1.18);z-index:10}
+.map-house.completed{opacity:.55;filter:grayscale(40%)}
+.map-house.locked{opacity:.35;pointer-events:none;filter:grayscale(60%)}
+.map-house-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 3px 10px rgba(0,0,0,.2);border:3px solid #FFF;transition:all .3s}
+.map-house:hover .map-house-icon{box-shadow:0 5px 18px rgba(0,0,0,.3)}
+.map-house-name{font-size:10px;font-weight:700;color:#FFF;text-shadow:0 1px 3px rgba(0,0,0,.5);background:rgba(0,0,0,.45);padding:2px 8px;border-radius:10px;white-space:nowrap}
+.map-house-status{font-size:16px;position:absolute;top:-8px;right:-8px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.3))}
+.map-house-status.bouncing{animation:bounce 1.5s infinite}
+
+/* 对话答题 */
+.quiz-page{background:linear-gradient(180deg,#FFF8E7,#FFF3E0);justify-content:flex-start;padding-top:10px}
+.quiz-header{width:100%;display:flex;flex-direction:row;align-items:center;gap:12px;padding:10px 16px;background:rgba(255,255,255,.9);border-radius:16px;margin-bottom:12px;box-shadow:0 2px 10px rgba(0,0,0,.05);flex-wrap:nowrap}
+.quiz-npc-name{font-size:1.1em;font-weight:700;color:#5B3A29;white-space:nowrap}
+.quiz-body{width:100%;display:flex;gap:14px;align-items:flex-start;margin-bottom:14px}
+.npc-img-wrap{flex-shrink:0;width:100px;border-radius:16px;overflow:hidden;box-shadow:0 3px 12px rgba(0,0,0,.1);position:relative}
+.npc-img-wrap img{width:100%;display:block}
+.dialogue-box{flex:1;background:#FFF;border-radius:18px;padding:16px 18px;position:relative;box-shadow:0 3px 12px rgba(0,0,0,.08);font-size:.93em;line-height:1.6;color:#5B3A29;min-height:90px}
+.dialogue-box::before{content:'';position:absolute;left:-9px;top:18px;width:0;height:0;border-top:9px solid transparent;border-bottom:9px solid transparent;border-right:9px solid #FFF}
+.dialogue-speaker{font-weight:700;color:#FF6B6B}
+.question-box{width:100%;background:#FFF;border-radius:18px;padding:16px 18px;box-shadow:0 3px 12px rgba(0,0,0,.08);margin-bottom:8px}
+.question-tag{display:inline-block;background:#FF9A56;color:#FFF;padding:3px 12px;border-radius:16px;font-size:.8em;font-weight:700;margin-bottom:8px}
+.question-text{font-size:.98em;font-weight:600;color:#3E2723;line-height:1.5}
+.options-list{width:100%;display:flex;flex-direction:column;gap:8px}
+.opt-btn{display:flex;align-items:center;gap:10px;padding:12px 16px;background:#FFF;border:2.5px solid #E8E0D5;border-radius:14px;cursor:pointer;transition:all .25s;font-size:.92em;color:#5B3A29;text-align:left;font-family:inherit}
+.opt-btn:hover{border-color:#FF9A56;background:#FFF8F0;transform:translateX(4px)}
+.opt-letter{display:flex;align-items:center;justify-content:center;width:30px;height:30px;background:#F5F0E8;border-radius:50%;font-weight:700;font-size:.85em;color:#7B6B5D;flex-shrink:0;transition:all .25s}
+.opt-btn:hover .opt-letter{background:#FF9A56;color:#FFF}
+.opt-btn.correct{border-color:#6BCB77;background:#E8F5E9;animation:popIn .4s}
+.opt-btn.correct .opt-letter{background:#6BCB77;color:#FFF}
+.opt-btn.wrong{border-color:#EF5350;background:#FFEBEE;animation:shake .5s}
+.opt-btn.wrong .opt-letter{background:#EF5350;color:#FFF}
+.opt-btn.disabled{pointer-events:none;opacity:.6}
+
+/* 反馈弹窗 */
+.feedback-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;justify-content:center;align-items:center;z-index:100}
+.feedback-overlay.show{display:flex}
+.feedback-card{background:#FFF;border-radius:24px;padding:26px 22px;max-width:400px;width:90%;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.2);animation:popIn .4s}
+.fb-icon{font-size:2.8em;margin-bottom:8px}
+.fb-title{font-size:1.3em;font-weight:800;margin-bottom:10px}
+.fb-title.ok{color:#4CAF50}
+.fb-title.ng{color:#EF5350}
+.fb-knowledge{background:#F5F5F5;border-radius:14px;padding:14px;margin:12px 0;text-align:left;line-height:1.6;font-size:.88em;color:#5B3A29}
+.fb-knowledge::before{content:'💡 科普小知识';display:block;font-weight:700;margin-bottom:5px;color:#FF9A56}
+.fb-reply{font-style:italic;color:#7B6B5D;margin:10px 0 16px;font-size:.88em;line-height:1.5}
+
+/* 通关 */
+.done-page{background:linear-gradient(180deg,#FFF8E7,#FFF3E0,#FFE0B2)}
+.done-icon{font-size:5em;animation:bounce 1s infinite}
+.done-title{font-size:2em;font-weight:800;color:#5B3A29}
+.done-sub{color:#7B6B5D;line-height:1.6;text-align:center;margin:8px 0 16px}
+.stats{display:flex;gap:16px;margin-bottom:20px}
+.stat{background:#FFF;border-radius:14px;padding:14px 18px;text-align:center;box-shadow:0 3px 10px rgba(0,0,0,.08)}
+.stat-num{font-size:1.6em;font-weight:800;color:#FF9A56}
+.stat-label{font-size:.8em;color:#7B6B5D;margin-top:2px}
+.summary{width:100%;max-width:500px;background:#FFF;border-radius:18px;padding:18px;margin-bottom:18px;box-shadow:0 3px 12px rgba(0,0,0,.08)}
+.summary h3{color:#5B3A29;margin-bottom:10px;font-size:1.05em}
+.summary-item{display:flex;align-items:flex-start;gap:6px;padding:6px 0;border-bottom:1px solid #F0E8D8;font-size:.85em;color:#5B3A29;line-height:1.5}
+.summary-item:last-child{border:none}
+.summary-dot{color:#FF9A56;font-weight:700}
+
+@media(max-width:600px){
+  .home-title{font-size:1.5em}
+  .home-doctor{width:150px}
+  .quiz-body{flex-direction:column;align-items:center}
+  .dialogue-box::before{display:none}
+  .npc-img-wrap{width:80px}
+  .map-house-icon{width:28px;height:28px;font-size:14px}
+  .map-house-name{font-size:8px;padding:1px 6px}
+  .btn{padding:12px 36px;font-size:1em}
+  .btn-primary{padding:14px 44px;font-size:1.1em}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ====== 首页 ====== -->
+<div class="page active" id="home">
+  <img src="小象医生形象.jpg" alt="小象医生" class="home-doctor">
+  <h1 class="home-title">🐘 小象镇听力小医生</h1>
+  <p class="home-sub">用知识守护每一双耳朵</p>
+  <button class="btn btn-primary" onclick="startGame()">开始游戏</button>
+</div>
+
+<!-- ====== 地图 ====== -->
+<div class="page" id="map">
+  <div class="map-header">
+    <span class="map-title">🏝️ 小象镇地图</span>
+    <div style="text-align:right">
+      <span class="progress" id="progressText">进度: 0/6</span>
+      <div class="progress-bar"><div class="progress-fill" id="progressBar" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="map-area" id="mapArea">
+      <!-- 房屋标记由JS动态生成 -->
+    </div>
+</div>
+
+<!-- ====== 答题 ====== -->
+<div class="page" id="quiz">
+  <div class="quiz-header">
+    <button class="btn btn-back" onclick="backToMap()">← 返回地图</button>
+    <span class="quiz-npc-name" id="quizNpcName"></span>
+  </div>
+  <div class="quiz-body">
+    <div class="npc-img-wrap">
+      <img src="小象医生形象.jpg" alt="NPC" id="npcImg">
+    </div>
+    <div class="dialogue-box" id="dialogueBox"></div>
+  </div>
+  <div class="question-box">
+    <span class="question-tag">📋 问题</span>
+    <p class="question-text" id="questionText"></p>
+  </div>
+  <div class="options-list" id="optionsList"></div>
+</div>
+
+<!-- ====== 反馈弹窗 ====== -->
+<div class="feedback-overlay" id="feedbackOverlay"><div class="feedback-card" id="feedbackCard"></div></div>
+
+<!-- ====== 通关 ====== -->
+<div class="page" id="done">
+  <div class="done-icon">🎉</div>
+  <h1 class="done-title">恭喜通关！</h1>
+  <p class="done-sub">你已经帮助小象镇所有居民<br>学会了正确保护耳朵的方法！</p>
+  <div class="stats">
+    <div class="stat"><div class="stat-num" id="statCorrect">0</div><div class="stat-label">答对题数</div></div>
+    <div class="stat"><div class="stat-num">6</div><div class="stat-label">帮助居民</div></div>
+  </div>
+  <div class="summary"><h3>📚 今日学到的听力保护知识</h3><div id="knowledgeList"></div></div>
+  <button class="btn btn-primary" onclick="restartGame()">再玩一次</button>
+</div>
+
+</div>
+
+<script>
+const npcs=[
+  {id:0,name:'小象蹦蹦',img:'小象形象/小象蹦蹦.jpg',dialogue:'<span class="dialogue-speaker">蹦蹦：</span>医生医生！我最近天天戴着耳机听歌，声音开到最大，感觉超爽的！这样应该没问题吧？',
+   question:'长时间听85分贝以上的声音，对听力有什么影响？',
+   options:[{l:'A',t:'1小时以上就可能造成永久性听力损伤',c:true},{l:'B',t:'听8小时才会有影响',c:false},{l:'C',t:'年轻人耳朵好，完全没影响',c:false},{l:'D',t:'只有睡觉时听才会损伤',c:false}],
+   knowledge:'85分贝≈繁忙城市交通的声音。声音超过85分贝并持续1小时以上，就可能对内耳的毛细胞造成不可逆的损伤！建议遵循"60-60原则"：音量不超过最大音量的60%，每次使用耳机不超过60分钟。',
+   reply:'蹦蹦（惊讶地摘下耳机）："原来这么危险！我以后一定把音量调小，还会定时休息！"'},
+  {id:1,name:'小象朵朵',img:'小象形象/小象朵朵.jpg',dialogue:'<span class="dialogue-speaker">朵朵：</span>医生，我最近迷上了有声故事，每天放学就戴着耳机听，一戴就是三四个小时，好像也没什么不舒服呀？',
+   question:'连续戴耳机多长时间后，应该让耳朵休息一下？',
+   options:[{l:'A',t:'不用休息，耳朵会自己适应',c:false},{l:'B',t:'每60分钟就应该休息5-10分钟',c:true},{l:'C',t:'戴4小时后休息就行',c:false},{l:'D',t:'只有耳朵疼了才需要休息',c:false}],
+   knowledge:'耳朵里的毛细胞非常脆弱，长时间声音刺激会让它们疲劳甚至死亡——而毛细胞是不可再生的！无论音量大小，连续佩戴耳机都不要超过60分钟，记得让耳朵"呼吸"一下。',
+   reply:'朵朵（恍然大悟）："原来耳朵也会累呀！我以后一定定时休息，不连续听那么久了！"'},
+  {id:2,name:'小象胖胖',img:'小象形象/小象胖胖.jpg',dialogue:'<span class="dialogue-speaker">胖胖：</span>医生，我耳朵老是痒痒的，我每天都用棉签掏一掏，掏完感觉可舒服了！这是好习惯吧？',
+   question:'关于掏耳朵，以下哪种说法是正确的？',
+   options:[{l:'A',t:'每天用棉签掏耳朵是讲卫生的好习惯',c:false},{l:'B',t:'耳屎是脏东西，必须清理干净',c:false},{l:'C',t:'耳屎有保护作用，棉签反而可能把耳屎推更深',c:true},{l:'D',t:'用棉签掏耳朵完全没有风险',c:false}],
+   knowledge:'耳屎（耵聍）其实是个好东西！它能阻挡灰尘和小虫子进入耳朵，还能抑菌杀菌。耳朵有天然的自洁功能，耳屎会自动排出。用棉签掏耳朵反而可能把耳屎推得更深，甚至损伤耳道皮肤和鼓膜！',
+   reply:'胖胖（赶紧放下棉签）："天哪！原来耳屎是保护耳朵的！我再也不乱掏了！"'},
+  {id:3,name:'小象乐乐',img:'小象形象/小象乐乐.jpg',dialogue:'<span class="dialogue-speaker">乐乐：</span>医生！我每天坐地铁通勤，车上太吵了，我就把耳机音量调到最大来盖住噪音，你说我聪明吧？',
+   question:'在嘈杂环境中，以下哪种做法最保护听力？',
+   options:[{l:'A',t:'把音量调到最大盖过噪音',c:false},{l:'B',t:'使用降噪耳机，保持适中音量',c:true},{l:'C',t:'换一个更响亮的耳机',c:false},{l:'D',t:'把一只耳朵堵住，另一只耳朵听音乐',c:false}],
+   knowledge:'在嘈杂环境中，环境噪音+耳机音量叠加，实际传入耳朵的声压级可能超过100分贝——相当于电钻的声音！正确做法是使用主动降噪耳机，它能减少环境噪音，让你在适中音量下也能听清内容。',
+   reply:'乐乐（摘下墨镜）："我还以为越大声越带劲呢！马上去买一副降噪耳机！"'},
+  {id:4,name:'小象奶奶',img:'小象形象/小象奶奶.jpg',dialogue:'<span class="dialogue-speaker">奶奶：</span>哎，小医生啊，最近总觉得听不太清楚，别人说话老要重复。不过这把年纪了，听不清也正常吧，不用管它？',
+   question:'发现听力下降时，最正确的做法是什么？',
+   options:[{l:'A',t:'年纪大了听不清很正常，不用管',c:false},{l:'B',t:'及时去医院耳鼻喉科检查',c:true},{l:'C',t:'自己上网买助听器戴上',c:false},{l:'D',t:'让别人大声说话就行了',c:false}],
+   knowledge:'听力下降的原因有很多：可能是耳屎堵塞、中耳炎、老年性耳聋等，每种原因的处理方式完全不同！自行购买助听器可能不合适甚至会加重问题。早发现、早诊断、早干预，很多听力问题都是可以改善的！',
+   reply:'奶奶（慈祥地笑了）："谢谢你，小医生！我明天就去医院挂个耳鼻喉科的号！"'},
+  {id:5,name:'小象球球',img:'小象形象/小象球球.jpg',dialogue:'<span class="dialogue-speaker">球球：</span>医生！我每天游泳训练完就直接去吃饭，耳朵里进水了也不管，反正过一会儿就自己干了，没事吧？',
+   question:'游泳后耳朵进水不处理，可能引发什么问题？',
+   options:[{l:'A',t:'完全没问题，水会自己蒸发',c:false},{l:'B',t:'可能引发外耳道炎（游泳耳）',c:true},{l:'C',t:'只会导致暂时听不清，不会生病',c:false},{l:'D',t:'水会在耳朵里变成耳屎',c:false}],
+   knowledge:'潮湿的耳道是真菌和细菌的"温床"！游泳后耳朵长期潮湿，容易引发外耳道炎（俗称"游泳耳"），出现红肿、疼痛、瘙痒等症状。游泳后应侧头单脚跳排掉积水，或用干净毛巾轻轻擦拭外耳，保持耳道干燥。',
+   reply:'球球（调皮地敬了个礼）："收到！以后游完泳第一件事就是清理耳朵里的水！"'}
+];
+
+// 房屋在图片中的位置（百分比），请根据实际地图调整
+const housePositions=[
+  {top:22,left:38},  // 蹦蹦
+  {top:18,left:72},  // 朵朵
+  {top:60,left:20},  // 胖胖
+  {top:58,left:65},  // 乐乐
+  {top:28,left:55},  // 奶奶
+  {top:62,left:42},  // 球球
+];
+const houseIcons=['🎵','🌸','🍄','🏰','🏮','⚽'];
+
+let state={completed:new Set,current:null,correct:0,answered:new Set};
+
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active')}
+
+function startGame(){showPage('map');initMap();renderMap()}
+
+function initMap(){
+  const area=document.getElementById('mapArea');
+  area.innerHTML='';
+  npcs.forEach((n,i)=>{
+    const p=housePositions[i];
+    const d=document.createElement('div');
+    d.className='map-house';
+    d.id='house-'+i;
+    d.style.top=p.top+'%';
+    d.style.left=p.left+'%';
+    d.onclick=()=>visitNPC(i);
+    d.innerHTML=`
+      <div class="map-house-icon" style="background:${['#F8BBD0','#FFCC80','#A5D6A7','#CE93D8','#90CAF9','#FFF176'][i]}">${houseIcons[i]}</div>
+      <span class="map-house-name">${n.name}</span>
+      <span class="map-house-status" id="status-${i}"></span>
+    `;
+    area.appendChild(d);
+  });
+}
+
+function renderMap(){
+  const completed=state.completed.size,total=npcs.length;
+  document.getElementById('progressText').textContent=`进度: ${completed}/${total}`;
+  document.getElementById('progressBar').style.width=`${(completed/total)*100}%`;
+  let nextId=null;
+  for(const n of npcs){if(!state.completed.has(n.id)){nextId=n.id;break}}
+  npcs.forEach(n=>{
+    const g=document.getElementById('house-'+n.id);
+    const s=document.getElementById('status-'+n.id);
+    if(!g||!s)return;
+    g.classList.remove('completed','locked');
+    s.classList.remove('bouncing');
+    if(state.completed.has(n.id)){
+      g.classList.add('completed');
+      s.textContent='✅';
+    }else if(n.id===nextId){
+      s.textContent='📍';
+      s.classList.add('bouncing');
+    }else{
+      g.classList.add('locked');
+      s.textContent='🔒';
+    }
+  });
+}
+
+function visitNPC(id){
+  const n=npcs[id];if(state.completed.has(id))return;
+  state.current=id;
+  document.getElementById('quizNpcName').textContent=n.name+'的家';
+  document.getElementById('npcImg').src=n.img;
+  document.getElementById('dialogueBox').innerHTML=n.dialogue;
+  document.getElementById('questionText').textContent=n.question;
+  const grid=document.getElementById('optionsList');
+  grid.innerHTML='';
+  n.options.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.className='opt-btn';
+    b.innerHTML=`<span class="opt-letter">${o.l}</span><span>${o.t}</span>`;
+    b.onclick=()=>selectAnswer(i,n);
+    grid.appendChild(b);
+  });
+  showPage('quiz');
+}
+
+function selectAnswer(idx,n){
+  const btns=document.querySelectorAll('.opt-btn');
+  const correct=n.options[idx].c;
+  btns.forEach(b=>b.classList.add('disabled'));
+  n.options.forEach((o,i)=>{if(o.c)btns[i].classList.add('correct');else if(i===idx&&!correct)btns[i].classList.add('wrong')});
+  if(!state.answered.has(n.id)){state.answered.add(n.id);if(correct)state.correct++}
+  setTimeout(()=>showFeedback(correct,n),800);
+}
+
+function showFeedback(ok,n){
+  const o=document.getElementById('feedbackOverlay'),c=document.getElementById('feedbackCard');
+  c.innerHTML=`<div class="fb-icon">${ok?'✅':'❌'}</div>
+    <div class="fb-title ${ok?'ok':'ng'}">${ok?'回答正确！':'回答错误'}</div>
+    <div class="fb-knowledge">${n.knowledge}</div>
+    <div class="fb-reply">💬 ${n.reply}</div>
+    <button class="btn btn-success" onclick="confirmFeedback(${n.id})">返回小镇地图</button>`;
+  o.classList.add('show');
+}
+
+function confirmFeedback(id){
+  document.getElementById('feedbackOverlay').classList.remove('show');
+  state.completed.add(id);
+  if(state.completed.size>=npcs.length)showDone();
+  else{showPage('map');renderMap()}
+}
+
+function backToMap(){showPage('map');renderMap()}
+
+function showDone(){
+  document.getElementById('statCorrect').textContent=state.correct;
+  document.getElementById('knowledgeList').innerHTML=npcs.map(n=>`<div class="summary-item"><span class="summary-dot">✦</span><span>${n.knowledge}</span></div>`).join('');
+  showPage('done');
+}
+
+function restartGame(){state={completed:new Set,current:null,correct:0,answered:new Set};showPage('home')}
+</script>
+</body>
+</html>
