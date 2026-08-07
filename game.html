@@ -237,7 +237,7 @@ function playAudio(src){if(currentAudio){currentAudio.pause();currentAudio=null}
 
 function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active')}
 
-function startGame(){ensureBgMusic();showPage('map');initMap();renderMap()}
+function startGame(){showPage('map');initMap();renderMap()}
 
 function initMap(){
   const area=document.getElementById('mapArea');
@@ -342,6 +342,8 @@ function showDone(){
 }
 
 function restartGame(){state={completed:new Set,current:null,correct:0,answered:new Set};showPage('home')}
+ensureBgMusic();
+document.addEventListener('click',function once(){if(bgMusic&&bgMusic.paused){bgMusic.play().catch(()=>{})}},{once:true});
 </script>
 </body>
 </html>
