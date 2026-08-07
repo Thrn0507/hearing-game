@@ -235,12 +235,14 @@ let bgMusic=null;
 function ensureBgMusic(){if(!bgMusic){bgMusic=new Audio('动画背景音乐.mp3');bgMusic.loop=true;bgMusic.volume=0.15}if(bgMusic.paused)bgMusic.play().catch(()=>{})}
 function toggleMusic(){const btn=document.getElementById('musicBtn');if(!bgMusic)return;if(bgMusic.paused){bgMusic.play().catch(()=>{});btn.textContent='🔊';btn.classList.remove('muted')}else{bgMusic.pause();btn.textContent='🔇';btn.classList.add('muted')}}
 function playAudio(src){if(currentAudio){currentAudio.pause();currentAudio=null}if(!src)return;const a=new Audio(src);a.onended=()=>{currentAudio=null};a.play().catch(()=>{});currentAudio=a}
-const clickSound=new Audio('鼠标点击.mp3');clickSound.preload='auto';function playClickSound(){clickSound.currentTime=0;clickSound.play().catch(()=>{})}
-document.addEventListener('click',function(e){const t=e.target;if(t.closest('.opt-btn'))return;if(t.closest('button')||t.closest('.map-house'))playClickSound()});
+let clickCtx=null,clickBuf=null;
+function ensureClickSound(){if(clickBuf)return;if(!clickCtx)clickCtx=new(window.AudioContext||window.webkitAudioContext);fetch('鼠标点击.mp3').then(r=>r.arrayBuffer()).then(b=>clickCtx.decodeAudioData(b)).then(d=>{clickBuf=d}).catch(()=>{})}
+function playClickSound(){if(!clickBuf||!clickCtx)return;if(clickCtx.state==='suspended')clickCtx.resume();const s=clickCtx.createBufferSource();s.buffer=clickBuf;s.connect(clickCtx.destination);s.start(0)}
+document.addEventListener('click',function(e){const t=e.target;if(t.closest('.opt-btn'))return;if(t.closest('button')||t.closest('.map-house')){ensureClickSound();playClickSound()}});
 
 function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active')}
 
-function startGame(){showPage('map');initMap();renderMap()}
+function startGame(){showPage('map');initMap();renderMap();ensureClickSound()}
 
 function initMap(){
   const area=document.getElementById('mapArea');
