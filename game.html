@@ -6,14 +6,14 @@
 <title>小象镇听力小医生</title>
 <!-- v4 -->
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{
   font-family:'PingFang SC','Microsoft YaHei',sans-serif;
   background:linear-gradient(180deg,#E8F5E9,#FFF8E7);
-  min-height:100vh;display:flex;justify-content:center;align-items:center;
-  user-select:none;
+  min-height:100vh;min-height:100dvh;display:flex;justify-content:center;align-items:center;
+  user-select:none;touch-action:manipulation;
 }
-.container{width:100%;max-width:800px;min-height:100vh;position:relative;overflow:hidden;transform:scale(1.2) translateY(-30px);transform-origin:top center}
+.container{width:100%;max-width:800px;min-height:100vh;min-height:100dvh;position:relative;overflow:hidden;transform:scale(1.2) translateY(-30px);transform-origin:top center}
 .page{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px;animation:fadeIn .5s}
 .page.active{display:flex}
 @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
@@ -21,6 +21,7 @@ body{
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
 @keyframes popIn{0%{transform:scale(0);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 
 /* 首页 */
 .home-page{background:linear-gradient(180deg,#87CEEB 0%,#B8E4F0 35%,#FFF8E7 70%)}
@@ -109,15 +110,39 @@ body{
 .summary-dot{color:#FF9A56;font-weight:700}
 
 @media(max-width:600px){
-  .home-title{font-size:1.5em}
-  .home-doctor{width:150px}
+  .container{transform:none}
+  .page{min-height:100vh;min-height:100dvh;padding:12px}
+  .home-title{font-size:1.3em;text-align:center}
+  .home-doctor{width:130px}
+  .home-sub{font-size:.9em}
+  .btn{padding:14px 34px;font-size:1em}
+  .btn-primary{padding:16px 42px;font-size:1.1em}
+  .map-header{flex-wrap:wrap;gap:6px;padding:8px 10px}
+  .map-title{font-size:.95em}
+  .map-area{max-width:100%;border-radius:12px}
+  .map-house-icon{width:32px;height:32px;font-size:15px}
+  .map-house-name{font-size:9px;padding:2px 6px}
+  .map-house-status{font-size:14px;top:-6px;right:-6px}
   .quiz-body{flex-direction:column;align-items:center}
   .dialogue-box::before{display:none}
-  .npc-img-wrap{width:80px}
-  .map-house-icon{width:28px;height:28px;font-size:14px}
-  .map-house-name{font-size:8px;padding:1px 6px}
-  .btn{padding:12px 36px;font-size:1em}
-  .btn-primary{padding:14px 44px;font-size:1.1em}
+  .npc-img-wrap{width:70px}
+  .quiz-header{flex-wrap:wrap;gap:6px;padding:8px 10px}
+  .quiz-npc-name{font-size:.95em}
+  .dialogue-box{font-size:.85em;padding:12px 14px;min-height:70px}
+  .question-text{font-size:.88em}
+  .opt-btn{padding:12px 14px;font-size:.85em;min-height:44px}
+  .opt-letter{width:26px;height:26px;font-size:.8em}
+  .feedback-card{padding:20px 16px;max-width:92%}
+  .fb-title{font-size:1.1em}
+  .fb-knowledge{font-size:.82em;padding:10px}
+  .done-title{font-size:1.5em}
+  .done-icon{font-size:3.5em}
+  .done-page{padding-top:20px}
+  .stats{gap:10px}
+  .stat{padding:10px 14px}
+  .stat-num{font-size:1.3em}
+  .summary{padding:14px}
+  .summary-item{font-size:.78em}
 }
 </style>
 </head>
@@ -233,7 +258,7 @@ let state={completed:new Set,current:null,correct:0,answered:new Set};
 let currentAudio=null;
 let bgMusic=null;
 function ensureBgMusic(){if(!bgMusic){bgMusic=new Audio('动画背景音乐.mp3');bgMusic.loop=true;bgMusic.volume=0.15}if(bgMusic.paused)bgMusic.play().catch(()=>{})}
-function toggleMusic(){const btn=document.getElementById('musicBtn');if(!bgMusic)return;if(bgMusic.paused){bgMusic.play().catch(()=>{});btn.textContent='🔊';btn.classList.remove('muted')}else{bgMusic.pause();btn.textContent='🔇';btn.classList.add('muted')}}
+function toggleMusic(){const btn=document.getElementById('musicBtn');if(!bgMusic)return;if(bgMusic.paused){if(clickCtx&&clickCtx.state==='suspended')clickCtx.resume();bgMusic.play().catch(()=>{});btn.textContent='🔊';btn.classList.remove('muted')}else{bgMusic.pause();btn.textContent='🔇';btn.classList.add('muted')}}
 function playAudio(src){if(currentAudio){currentAudio.pause();currentAudio=null}if(!src)return;const a=new Audio(src);a.onended=()=>{currentAudio=null};a.play().catch(()=>{});currentAudio=a}
 let clickCtx=null,clickBuf=null;
 function ensureClickSound(){if(clickBuf)return;if(!clickCtx)clickCtx=new(window.AudioContext||window.webkitAudioContext);fetch('鼠标点击.mp3').then(r=>r.arrayBuffer()).then(b=>clickCtx.decodeAudioData(b)).then(d=>{clickBuf=d}).catch(()=>{})}
@@ -348,7 +373,7 @@ function showDone(){
 
 function restartGame(){state={completed:new Set,current:null,correct:0,answered:new Set};showPage('home')}
 ensureBgMusic();
-document.addEventListener('click',function once(){if(bgMusic&&bgMusic.paused){bgMusic.play().catch(()=>{})}},{once:true});
+document.addEventListener('click',function once(){if(clickCtx&&clickCtx.state==='suspended')clickCtx.resume();if(bgMusic&&bgMusic.paused){bgMusic.play().catch(()=>{})}},{once:true});
 </script>
 </body>
 </html>
