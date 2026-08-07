@@ -38,6 +38,9 @@ body{
 .map-page{background:linear-gradient(180deg,#4FC3F7,#29B6F6,#0288D1);justify-content:flex-start;padding-top:10px}
 .map-header{width:100%;display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:rgba(255,255,255,.9);border-radius:16px;margin-bottom:8px;box-shadow:0 2px 10px rgba(0,0,0,.08);z-index:10}
 .map-title{font-size:1.2em;font-weight:700;color:#5B3A29}
+.music-btn{width:36px;height:36px;border-radius:50%;border:none;background:#F5F0E8;cursor:pointer;font-size:1.1em;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.music-btn:hover{background:#E8E0D5}
+.music-btn.muted{background:#FFEBEE}
 .progress{font-size:.9em;color:#7B6B5D;font-weight:600}
 .progress-bar{width:100%;height:8px;background:#E0E0E0;border-radius:4px;margin-top:3px;overflow:hidden}
 .progress-fill{height:100%;background:linear-gradient(90deg,#6BCB77,#4CAF50);border-radius:4px;transition:width .5s}
@@ -132,6 +135,7 @@ body{
 <div class="page" id="map">
   <div class="map-header">
     <span class="map-title">🏝️ 小象镇地图</span>
+    <button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="背景音乐">🔊</button>
     <div style="text-align:right">
       <span class="progress" id="progressText">进度: 0/6</span>
       <div class="progress-bar"><div class="progress-fill" id="progressBar" style="width:0%"></div></div>
@@ -226,7 +230,10 @@ const houseIcons=['🎵','🌸','🍄','🏰','🏮','⚽'];
 
 let state={completed:new Set,current:null,correct:0,answered:new Set};
 let currentAudio=null;
-function playAudio(src){if(currentAudio){currentAudio.pause();currentAudio=null}if(!src)return;const a=new Audio(src);a.play().catch(()=>{});currentAudio=a}
+let bgMusic=null;
+function ensureBgMusic(){if(!bgMusic){bgMusic=new Audio('动画背景音乐.mp3');bgMusic.loop=true;bgMusic.volume=0.15}if(bgMusic.paused)bgMusic.play().catch(()=>{})}
+function toggleMusic(){const btn=document.getElementById('musicBtn');if(!bgMusic)return;if(bgMusic.paused){bgMusic.play().catch(()=>{});btn.textContent='🔊';btn.classList.remove('muted')}else{bgMusic.pause();btn.textContent='🔇';btn.classList.add('muted')}}
+function playAudio(src){if(currentAudio){currentAudio.pause();currentAudio=null}if(!src)return;const a=new Audio(src);a.onended=()=>{currentAudio=null};a.play().catch(()=>{});currentAudio=a}
 
 function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active')}
 
@@ -298,6 +305,7 @@ function visitNPC(id){
 }
 
 function selectAnswer(idx,n){
+  playAudio('答题音频.mp3');
   const btns=document.querySelectorAll('.opt-btn');
   const correct=n.options[idx].c;
   btns.forEach(b=>b.classList.add('disabled'));
@@ -327,12 +335,14 @@ function confirmFeedback(id){
 function backToMap(){playAudio(null);showPage('map');renderMap()}
 
 function showDone(){
+  playAudio('胜利音频.mp3');
   document.getElementById('statCorrect').textContent=state.correct;
   document.getElementById('knowledgeList').innerHTML=npcs.map(n=>`<div class="summary-item"><span class="summary-dot">✦</span><span>${n.knowledge}</span></div>`).join('');
   showPage('done');
 }
 
 function restartGame(){state={completed:new Set,current:null,correct:0,answered:new Set};showPage('home')}
+ensureBgMusic();
 </script>
 </body>
 </html>
