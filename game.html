@@ -211,35 +211,53 @@ body{
 <script>
 const npcs=[
   {id:0,name:'小象蹦蹦',img:'小象形象/小象蹦蹦.jpg',audio_dialogue:'小象说话/蹦蹦对话框.mp3',audio_answer:'小象说话/蹦蹦答题后.mp3',dialogue:'<span class="dialogue-speaker">蹦蹦：</span>医生医生！我最近天天戴着耳机听歌，声音开到最大，感觉超爽的！这样应该没问题吧？',
-   question:'长时间听85分贝以上的声音，对听力有什么影响？',
-   options:[{l:'A',t:'1小时以上就可能造成永久性听力损伤',c:true},{l:'B',t:'听8小时才会有影响',c:false},{l:'C',t:'年轻人耳朵好，完全没影响',c:false},{l:'D',t:'只有睡觉时听才会损伤',c:false}],
-   knowledge:'85分贝≈繁忙城市交通的声音。声音超过85分贝并持续1小时以上，就可能对内耳的毛细胞造成不可逆的损伤！建议遵循"60-60原则"：音量不超过最大音量的60%，每次使用耳机不超过60分钟。',
-   reply:'蹦蹦（惊讶地摘下耳机）："原来这么危险！我以后一定把音量调小，还会定时休息！"'},
+   questions:[
+    {q:'长时间听85分贝以上的声音，对听力有什么影响？',opts:[{l:'A',t:'1小时以上就可能造成永久性听力损伤',c:true},{l:'B',t:'听8小时才会有影响',c:false},{l:'C',t:'年轻人耳朵好，完全没影响',c:false},{l:'D',t:'只有睡觉时听才会损伤',c:false}],k:'85分贝≈繁忙城市交通的声音。声音超过85分贝并持续1小时以上，就可能对内耳的毛细胞造成不可逆的损伤！建议遵循"60-60原则"：音量不超过最大音量的60%，每次使用耳机不超过60分钟。',r:'蹦蹦（惊讶地摘下耳机）："原来这么危险！我以后一定把音量调小，还会定时休息！"'},
+    {q:'保护听力的"60-60原则"指的是什么？',opts:[{l:'A',t:'音量不超过60%，每次不超过60分钟',c:true},{l:'B',t:'每天听60首歌，每首60秒',c:false},{l:'C',t:'耳机价格不低于60元，使用不超过60天',c:false},{l:'D',t:'60岁以后就不能戴耳机了',c:false}],k:'"60-60原则"是保护听力的黄金法则：耳机音量不超过最大音量的60%，连续使用耳机不超过60分钟。这样能有效避免毛细胞因过度刺激而受损。',r:'蹦蹦："60-60原则！太简单了，我记住了！"'},
+    {q:'以下哪种声音大约是85分贝的水平？',opts:[{l:'A',t:'繁忙的城市交通噪音',c:true},{l:'B',t:'安静的图书馆',c:false},{l:'C',t:'树叶沙沙声',c:false},{l:'D',t:'喷气式飞机起飞',c:false}],k:'85分贝大约是繁忙城市交通、吸尘器工作时的声音。而喷气式飞机起飞可达140分贝以上，会瞬间损伤听力！安静的图书馆约40分贝，树叶沙沙声约20分贝。',r:'蹦蹦："原来我平时把耳机开到最大，比马路上的噪音还大！太可怕了！"'},
+    {q:'耳机音量过大，最先损伤耳朵的哪个部位？',opts:[{l:'A',t:'内耳的毛细胞',c:true},{l:'B',t:'耳廓（外耳）',c:false},{l:'C',t:'耳垂',c:false},{l:'D',t:'耳朵外面的皮肤',c:false}],k:'内耳的毛细胞是听觉的关键——它们将声音振动转化为电信号传给大脑。过大音量会让毛细胞过度疲劳甚至死亡，而毛细胞一旦死亡就无法再生，造成永久性听力损伤！',r:'蹦蹦："毛细胞好脆弱啊，我以后一定好好保护它们！"'},
+    {q:'以下哪种做法对保护听力最有效？',opts:[{l:'A',t:'降低耳机音量，定期让耳朵休息',c:true},{l:'B',t:'只戴一只耳机听',c:false},{l:'C',t:'换成更贵的耳机',c:false},{l:'D',t:'站着听比坐着听好',c:false}],k:'保护听力最关键是控制音量和时长！只戴一只耳机并不能减少单侧耳朵的损伤，耳机价格也与音量无关。正确做法是：降低音量、限时使用、定期休息。',r:'蹦蹦："明白了！不是钱的问题，是习惯的问题！"'}
+   ]},
   {id:1,name:'小象朵朵',img:'小象形象/小象朵朵.jpg',audio_dialogue:'小象说话/朵朵对话框 (2).mp3',audio_answer:'小象说话/朵朵答题后.mp3',dialogue:'<span class="dialogue-speaker">朵朵：</span>医生，我最近迷上了有声故事，每天放学就戴着耳机听，一戴就是三四个小时，好像也没什么不舒服呀？',
-   question:'连续戴耳机多长时间后，应该让耳朵休息一下？',
-   options:[{l:'A',t:'不用休息，耳朵会自己适应',c:false},{l:'B',t:'每60分钟就应该休息5-10分钟',c:true},{l:'C',t:'戴4小时后休息就行',c:false},{l:'D',t:'只有耳朵疼了才需要休息',c:false}],
-   knowledge:'耳朵里的毛细胞非常脆弱，长时间声音刺激会让它们疲劳甚至死亡——而毛细胞是不可再生的！无论音量大小，连续佩戴耳机都不要超过60分钟，记得让耳朵"呼吸"一下。',
-   reply:'朵朵（恍然大悟）："原来耳朵也会累呀！我以后一定定时休息，不连续听那么久了！"'},
+   questions:[
+    {q:'连续戴耳机多长时间后，应该让耳朵休息一下？',opts:[{l:'A',t:'不用休息，耳朵会自己适应',c:false},{l:'B',t:'每60分钟就应该休息5-10分钟',c:true},{l:'C',t:'戴4小时后休息就行',c:false},{l:'D',t:'只有耳朵疼了才需要休息',c:false}],k:'耳朵里的毛细胞非常脆弱，长时间声音刺激会让它们疲劳甚至死亡——而毛细胞是不可再生的！无论音量大小，连续佩戴耳机都不要超过60分钟，记得让耳朵"呼吸"一下。',r:'朵朵（恍然大悟）："原来耳朵也会累呀！我以后一定定时休息，不连续听那么久了！"'},
+    {q:'内耳的什么细胞受损后无法再生？',opts:[{l:'A',t:'毛细胞',c:true},{l:'B',t:'皮肤细胞',c:false},{l:'C',t:'血细胞',c:false},{l:'D',t:'神经细胞都可以再生',c:false}],k:'毛细胞是内耳中负责将声音振动转化为神经信号的关键细胞。人类和大多数哺乳动物的毛细胞一旦受损或死亡就无法再生，这就是为什么听力损伤往往是永久性的！',r:'朵朵："天哪！毛细胞居然不能再生？那我以后一定要好好爱护它们！"'},
+    {q:'以下哪种行为对听力的伤害最大？',opts:[{l:'A',t:'每天戴耳机超过4小时',c:true},{l:'B',t:'偶尔用耳机听半小时音乐',c:false},{l:'C',t:'在安静房间外放听故事',c:false},{l:'D',t:'每天做眼保健操',c:false}],k:'长时间佩戴耳机（尤其超过3-4小时），即使音量不大，也会让毛细胞持续处于工作状态，得不到休息。间歇性使用并控制时长，才是爱护耳朵的正确方式。',r:'朵朵："我以后每天只戴一小会儿，绝不久戴了！"'},
+    {q:'耳朵疲劳的早期信号不包括以下哪项？',opts:[{l:'A',t:'耳朵发热发红',c:true},{l:'B',t:'耳朵里有嗡嗡声（耳鸣）',c:false},{l:'C',t:'听声音感觉闷闷的',c:false},{l:'D',t:'别人说话听不太清楚',c:false}],k:'耳朵疲劳的早期信号包括：耳鸣（嗡嗡声）、听力模糊、耳朵闷胀感等。如果出现这些情况，说明你的耳朵需要休息了！耳朵发热发红一般是外耳廓血液循环问题，不一定是听力疲劳的信号。',r:'朵朵："原来耳鸣是耳朵在喊救命！我以后会注意这些信号的！"'},
+    {q:'关于"听觉休息"，以下哪项是正确的？',opts:[{l:'A',t:'在安静环境中让耳朵放松一段时间',c:true},{l:'B',t:'把音量调小一半继续听就行',c:false},{l:'C',t:'换一只耳朵听就是休息',c:false},{l:'D',t:'睡觉时戴耳机听轻音乐就是休息',c:false}],k:'真正的听觉休息是让耳朵处于安静环境中，不给毛细胞任何声音刺激。换只耳朵听、调小音量、睡觉时听轻音乐——这些都不是真正的休息，耳朵仍在工作！',r:'朵朵："原来真正的休息是完全安静下来！我懂了！"'}
+   ]},
   {id:2,name:'小象胖胖',img:'小象形象/小象胖胖.jpg',audio_dialogue:'小象说话/胖胖对话框 (2).mp3',audio_answer:'小象说话/胖胖答题后.mp3',dialogue:'<span class="dialogue-speaker">胖胖：</span>医生，我耳朵老是痒痒的，我每天都用棉签掏一掏，掏完感觉可舒服了！这是好习惯吧？',
-   question:'关于掏耳朵，以下哪种说法是正确的？',
-   options:[{l:'A',t:'每天用棉签掏耳朵是讲卫生的好习惯',c:false},{l:'B',t:'耳屎是脏东西，必须清理干净',c:false},{l:'C',t:'耳屎有保护作用，棉签反而可能把耳屎推更深',c:true},{l:'D',t:'用棉签掏耳朵完全没有风险',c:false}],
-   knowledge:'耳屎（耵聍）其实是个好东西！它能阻挡灰尘和小虫子进入耳朵，还能抑菌杀菌。耳朵有天然的自洁功能，耳屎会自动排出。用棉签掏耳朵反而可能把耳屎推得更深，甚至损伤耳道皮肤和鼓膜！',
-   reply:'胖胖（赶紧放下棉签）："天哪！原来耳屎是保护耳朵的！我再也不乱掏了！"'},
+   questions:[
+    {q:'关于掏耳朵，以下哪种说法是正确的？',opts:[{l:'A',t:'每天用棉签掏耳朵是讲卫生的好习惯',c:false},{l:'B',t:'耳屎是脏东西，必须清理干净',c:false},{l:'C',t:'耳屎有保护作用，棉签反而可能把耳屎推更深',c:true},{l:'D',t:'用棉签掏耳朵完全没有风险',c:false}],k:'耳屎（耵聍）其实是个好东西！它能阻挡灰尘和小虫子进入耳朵，还能抑菌杀菌。耳朵有天然的自洁功能，耳屎会自动排出。用棉签掏耳朵反而可能把耳屎推得更深，甚至损伤耳道皮肤和鼓膜！',r:'胖胖（赶紧放下棉签）："天哪！原来耳屎是保护耳朵的！我再也不乱掏了！"'},
+    {q:'耳屎的医学术语叫什么？',opts:[{l:'A',t:'耵聍（dīng níng）',c:true},{l:'B',t:'角质',c:false},{l:'C',t:'皮脂',c:false},{l:'D',t:'淋巴液',c:false}],k:'耳屎的医学名称叫"耵聍"，是由耳道内的耵聍腺分泌的。它含有油脂、脂肪酸、蛋白质等成分，能润滑耳道、阻挡灰尘和昆虫，还能抑制细菌和真菌生长。',r:'胖胖："耵聍！这个名字好特别，我记住了！"'},
+    {q:'以下哪种情况才需要请医生帮忙清理耳屎？',opts:[{l:'A',t:'耳屎堵塞耳道，导致听力明显下降',c:true},{l:'B',t:'看到耳道口有一点耳屎',c:false},{l:'C',t:'感觉耳朵有点痒',c:false},{l:'D',t:'每天洗完澡后',c:false}],k:'正常情况下，耳屎会随着咀嚼、说话等下颌运动自然向外排出，不需要人为清理。只有当耳屎过多堵塞耳道、引起听力下降或疼痛时，才需要去医院由医生用专业工具安全取出。',r:'胖胖："原来只有在堵住的时候才需要找医生！我平时完全不用管它！"'},
+    {q:'用棉签掏耳朵最危险的是可能造成什么后果？',opts:[{l:'A',t:'刺穿鼓膜，导致听力永久损伤',c:true},{l:'B',t:'让耳朵变臭',c:false},{l:'C',t:'耳朵会变大',c:false},{l:'D',t:'耳屎会变颜色',c:false}],k:'鼓膜是一层非常薄的薄膜，厚度仅约0.1毫米！用棉签或其他工具掏耳朵，一旦用力过猛或被人碰到，就可能刺穿鼓膜，导致剧烈疼痛、出血甚至永久性听力损失。千万不要冒险！',r:'胖胖（吓得一哆嗦）："0.1毫米！比我作业本上的纸还薄！我发誓再也不碰棉签了！"'},
+    {q:'耳朵有自洁功能，耳屎是如何自然排出的？',opts:[{l:'A',t:'随着咀嚼和说话时下颌运动自然向外移动',c:true},{l:'B',t:'耳屎会被耳朵里的血管吸收',c:false},{l:'C',t:'睡觉时耳屎会自己流出来',c:false},{l:'D',t:'耳朵本身不会排耳屎，需要人为清理',c:false}],k:'耳道内的皮肤有一种特殊的"迁移"能力——皮肤细胞会从鼓膜方向缓慢向外移动，就像传送带一样，把耳屎带到耳道口。咀嚼、说话时的下颌运动也会加速这个过程。',r:'胖胖："耳朵自带传送带！太神奇了！大自然真聰明！"'}
+   ]},
   {id:3,name:'小象乐乐',img:'小象形象/小象乐乐.jpg',audio_dialogue:'小象说话/乐乐对话框.mp3',audio_answer:'小象说话/乐乐答题后.mp3',dialogue:'<span class="dialogue-speaker">乐乐：</span>医生！我每天坐地铁通勤，车上太吵了，我就把耳机音量调到最大来盖住噪音，你说我聪明吧？',
-   question:'在嘈杂环境中，以下哪种做法最保护听力？',
-   options:[{l:'A',t:'把音量调到最大盖过噪音',c:false},{l:'B',t:'使用降噪耳机，保持适中音量',c:true},{l:'C',t:'换一个更响亮的耳机',c:false},{l:'D',t:'把一只耳朵堵住，另一只耳朵听音乐',c:false}],
-   knowledge:'在嘈杂环境中，环境噪音+耳机音量叠加，实际传入耳朵的声压级可能超过100分贝——相当于电钻的声音！正确做法是使用主动降噪耳机，它能减少环境噪音，让你在适中音量下也能听清内容。',
-   reply:'乐乐（摘下墨镜）："我还以为越大声越带劲呢！马上去买一副降噪耳机！"'},
+   questions:[
+    {q:'在嘈杂环境中，以下哪种做法最保护听力？',opts:[{l:'A',t:'把音量调到最大盖过噪音',c:false},{l:'B',t:'使用降噪耳机，保持适中音量',c:true},{l:'C',t:'换一个更响亮的耳机',c:false},{l:'D',t:'把一只耳朵堵住，另一只耳朵听音乐',c:false}],k:'在嘈杂环境中，环境噪音+耳机音量叠加，实际传入耳朵的声压级可能超过100分贝——相当于电钻的声音！正确做法是使用主动降噪耳机，它能减少环境噪音，让你在适中音量下也能听清内容。',r:'乐乐（摘下墨镜）："我还以为越大声越带劲呢！马上去买一副降噪耳机！"'},
+    {q:'多大的声音可能造成即时听力损伤？',opts:[{l:'A',t:'120分贝以上',c:true},{l:'B',t:'50分贝',c:false},{l:'C',t:'70分贝',c:false},{l:'D',t:'90分贝',c:false}],k:'120分贝以上的声音（如鞭炮爆炸、摇滚演唱会前排、飞机起飞）即使只持续几秒，也可能造成即时的、永久性的听力损伤！而90分贝是长期暴露的安全上限，超过这个值就需要注意防护。',r:'乐乐："120分贝！我上次看演唱会站第一排，难怪出来耳朵嗡嗡的！"'},
+    {q:'降噪耳机的工作原理是什么？',opts:[{l:'A',t:'发出反向声波抵消环境噪音',c:true},{l:'B',t:'把耳朵完全堵住不让声音进来',c:false},{l:'C',t:'把音乐声音放大到覆盖噪音',c:false},{l:'D',t:'用棉花塞住耳机周围',c:false}],k:'主动降噪（ANC）耳机通过内置麦克风采集环境噪音，然后生成与噪音相位相反的声波，两者叠加后相互抵消。这样你就能在较低音量下听清音乐，不用为了盖过噪音而把音量调大。',r:'乐乐："反向声波抵消噪音！像科幻片一样！太酷了！"'},
+    {q:'以下哪种环境的噪音分贝数最高？',opts:[{l:'A',t:'摇滚演唱会现场',c:true},{l:'B',t:'繁忙的街道',c:false},{l:'C',t:'地铁车厢',c:false},{l:'D',t:'教室',c:false}],k:'摇滚演唱会现场可达110-120分贝，繁忙街道约80-90分贝，地铁车厢约80-95分贝，教室约50-70分贝。如果不得不待在高噪音环境中，记得佩戴耳塞等防护用品！',r:'乐乐："演唱会那么大声啊！以后我一定戴耳塞去！"'},
+    {q:'在KTV或演唱会现场，以下哪种做法最保护听力？',opts:[{l:'A',t:'佩戴专业的降噪耳塞',c:true},{l:'B',t:'坐在离音箱最近的位置',c:false},{l:'C',t:'跟着音乐大声唱歌',c:false},{l:'D',t:'喝冰水冷却耳朵',c:false}],k:'专业音乐耳塞（高保真耳塞）能均匀降低各频率的音量，既保护听力又不影响音质体验。远离音箱、定时到安静区域休息也是好习惯。喝冰水只能凉快一下，对听力保护没有任何作用。',r:'乐乐："原来还有专门的音乐耳塞！我马上去买！"'}
+   ]},
   {id:4,name:'小象奶奶',img:'小象形象/小象奶奶.jpg',audio_dialogue:'小象说话/奶奶对话框.mp3',audio_answer:'小象说话/奶奶答题后 (2).mp3',dialogue:'<span class="dialogue-speaker">奶奶：</span>哎，小医生啊，最近总觉得听不太清楚，别人说话老要重复。不过这把年纪了，听不清也正常吧，不用管它？',
-   question:'发现听力下降时，最正确的做法是什么？',
-   options:[{l:'A',t:'年纪大了听不清很正常，不用管',c:false},{l:'B',t:'及时去医院耳鼻喉科检查',c:true},{l:'C',t:'自己上网买助听器戴上',c:false},{l:'D',t:'让别人大声说话就行了',c:false}],
-   knowledge:'听力下降的原因有很多：可能是耳屎堵塞、中耳炎、老年性耳聋等，每种原因的处理方式完全不同！自行购买助听器可能不合适甚至会加重问题。早发现、早诊断、早干预，很多听力问题都是可以改善的！',
-   reply:'奶奶（慈祥地笑了）："谢谢你，小医生！我明天就去医院挂个耳鼻喉科的号！"'},
+   questions:[
+    {q:'发现听力下降时，最正确的做法是什么？',opts:[{l:'A',t:'年纪大了听不清很正常，不用管',c:false},{l:'B',t:'及时去医院耳鼻喉科检查',c:true},{l:'C',t:'自己上网买助听器戴上',c:false},{l:'D',t:'让别人大声说话就行了',c:false}],k:'听力下降的原因有很多：可能是耳屎堵塞、中耳炎、老年性耳聋等，每种原因的处理方式完全不同！自行购买助听器可能不合适甚至会加重问题。早发现、早诊断、早干预，很多听力问题都是可以改善的！',r:'奶奶（慈祥地笑了）："谢谢你，小医生！我明天就去医院挂个耳鼻喉科的号！"'},
+    {q:'老年性耳聋（presbycusis）最典型的特点是什么？',opts:[{l:'A',t:'先对高频声音（如鸟叫声）听不清',c:true},{l:'B',t:'突然完全听不见',c:false},{l:'C',t:'只有一只耳朵听不见',c:false},{l:'D',t:'耳朵会剧烈疼痛',c:false}],k:'老年性耳聋通常从高频听力下降开始，所以老人可能听不清鸟叫声、电话铃声、小孩的声音等，但对低频声音还比较敏感。这是一个缓慢渐进的过程，定期检查听力很重要！',r:'奶奶："怪不得我最近听鸟叫声不太清楚了！原来这就是信号！"'},
+    {q:'以下哪项不是听力下降的早期信号？',opts:[{l:'A',t:'耳朵偶尔发痒',c:true},{l:'B',t:'电视音量越调越大',c:false},{l:'C',t:'在嘈杂环境中听不清别人说话',c:false},{l:'D',t:'经常要求别人重复说过的话',c:false}],k:'听力下降的早期信号包括：电视音量变大、对话困难（尤其在嘈杂环境）、经常让人重复、听不清电话等。耳朵偶尔发痒一般是皮肤干燥或过敏，不一定是听力问题。',r:'奶奶："原来我老让孙女重复说话，是因为听力在下降！我得重视起来了！"'},
+    {q:'助听器应该去哪里配？',opts:[{l:'A',t:'医院或专业验配中心，由听力师验配',c:true},{l:'B',t:'网上随便买一个',c:false},{l:'C',t:'药店柜台',c:false},{l:'D',t:'超市电子产品区',c:false}],k:'助听器不是普通商品，而是医疗器械！需要先由医生诊断听力损失的类型和程度，再由专业听力师根据个人情况验配和调试。不合适的助听器不仅效果差，还可能进一步损伤听力。',r:'奶奶："原来助听器要像配眼镜一样专业验配！不能随便买啊！"'},
+    {q:'预防老年性听力下降，以下哪项最重要？',opts:[{l:'A',t:'避免长期暴露在噪音中，控制慢性病',c:true},{l:'B',t:'每天吃很多补品',c:false},{l:'C',t:'尽量不说话，保护耳朵',c:false},{l:'D',t:'经常掏耳朵保持通畅',c:false}],k:'预防听力下降的关键是：避免噪音暴露、控制高血压和糖尿病等慢性病（它们会影响内耳供血）、慎用耳毒性药物、保持健康生活方式。不说话反而可能让听觉中枢功能退化！',r:'奶奶："控制慢性病也能保护听力！我更要按时吃药了！"'}
+   ]},
   {id:5,name:'小象球球',img:'小象形象/小象球球.jpg',audio_dialogue:'小象说话/球球对话框 (2).mp3',audio_answer:'小象说话/球球答题后 (2).mp3',dialogue:'<span class="dialogue-speaker">球球：</span>医生！我每天游泳训练完就直接去吃饭，耳朵里进水了也不管，反正过一会儿就自己干了，没事吧？',
-   question:'游泳后耳朵进水不处理，可能引发什么问题？',
-   options:[{l:'A',t:'完全没问题，水会自己蒸发',c:false},{l:'B',t:'可能引发外耳道炎（游泳耳）',c:true},{l:'C',t:'只会导致暂时听不清，不会生病',c:false},{l:'D',t:'水会在耳朵里变成耳屎',c:false}],
-   knowledge:'潮湿的耳道是真菌和细菌的"温床"！游泳后耳朵长期潮湿，容易引发外耳道炎（俗称"游泳耳"），出现红肿、疼痛、瘙痒等症状。游泳后应侧头单脚跳排掉积水，或用干净毛巾轻轻擦拭外耳，保持耳道干燥。',
-   reply:'球球（调皮地敬了个礼）："收到！以后游完泳第一件事就是清理耳朵里的水！"'}
+   questions:[
+    {q:'游泳后耳朵进水不处理，可能引发什么问题？',opts:[{l:'A',t:'完全没问题，水会自己蒸发',c:false},{l:'B',t:'可能引发外耳道炎（游泳耳）',c:true},{l:'C',t:'只会导致暂时听不清，不会生病',c:false},{l:'D',t:'水会在耳朵里变成耳屎',c:false}],k:'潮湿的耳道是真菌和细菌的"温床"！游泳后耳朵长期潮湿，容易引发外耳道炎（俗称"游泳耳"），出现红肿、疼痛、瘙痒等症状。游泳后应侧头单脚跳排掉积水，或用干净毛巾轻轻擦拭外耳，保持耳道干燥。',r:'球球（调皮地敬了个礼）："收到！以后游完泳第一件事就是清理耳朵里的水！"'},
+    {q:'游泳后正确排出耳朵里的水的方法是？',opts:[{l:'A',t:'侧头，单脚轻轻跳几下',c:true},{l:'B',t:'用棉签伸进去吸干',c:false},{l:'C',t:'用力甩头',c:false},{l:'D',t:'用吹风机对着耳朵吹',c:false}],k:'侧头单脚跳是最安全有效的排水方法：将进水一侧的耳朵朝下，同侧脚轻轻跳几下，利用重力让水流出。用棉签可能把水推更深，用吹风机可能烫伤耳朵，用力甩头可能伤到颈椎。',r:'球球："侧头单脚跳！像跳芭蕾一样，以后这就是我的游泳后仪式了！"'},
+    {q:'外耳道炎（游泳耳）的典型症状不包括？',opts:[{l:'A',t:'流鼻血',c:true},{l:'B',t:'耳朵疼痛，拉耳垂时加重',c:false},{l:'C',t:'耳道红肿、瘙痒',c:false},{l:'D',t:'耳朵有分泌物或流水',c:false}],k:'外耳道炎的典型症状包括：耳朵疼痛（尤其在牵拉耳垂时）、耳道红肿、瘙痒、分泌物等。如果出现这些症状应及时就医。流鼻血通常与鼻腔问题有关，不是外耳道炎的症状。',r:'球球："原来拉耳垂会疼就是信号！我以后会注意的！"'},
+    {q:'以下哪种情况更容易引发"游泳耳"？',opts:[{l:'A',t:'在污染的水域游泳',c:true},{l:'B',t:'在干净的游泳池游泳',c:false},{l:'C',t:'在浴缸里泡澡',c:false},{l:'D',t:'用温水洗头',c:false}],k:'污染的水域（如湖泊、河流、不干净的海滩）含有大量细菌和真菌，更容易引发外耳道炎。即使是在干净的泳池，泳后也应及时排干耳道积水，因为潮湿本身就为细菌繁殖创造了条件。',r:'球球："以后我只在正规泳池游泳，游完马上排水！"'},
+    {q:'预防游泳耳，以下哪项做法是错误的？',opts:[{l:'A',t:'游泳前用棉签把耳道掏干净',c:true},{l:'B',t:'佩戴防水耳塞',c:false},{l:'C',t:'游泳后用毛巾擦干外耳',c:false},{l:'D',t:'游完泳侧头跳一跳排水',c:false}],k:'游泳前用棉签掏耳朵反而会破坏耳屎的保护层，让耳道更容易被细菌感染！正确做法是：佩戴防水耳塞、游泳后及时排水、用毛巾擦干外耳、必要时使用专用的耳道干燥滴剂。',r:'球球（恍然大悟）："原来游泳前不能掏耳朵！幸好我平时懒得掏，歪打正着了！"'}
+   ]}
 ];
 
 // 房屋在图片中的位置（百分比），请根据实际地图调整
@@ -253,7 +271,7 @@ const housePositions=[
 ];
 const houseIcons=['🎵','🌸','🍄','🏰','🏮','⚽'];
 
-let state={completed:new Set,current:null,correct:0,answered:new Set};
+let state={completed:new Set,current:null,correct:0,answered:new Set,currentQuestion:null,usedKnowledge:[]};
 let currentAudio=null;
 let bgMusic=null;
 function ensureBgMusic(){if(!bgMusic){bgMusic=new Audio('动画背景音乐.mp3');bgMusic.loop=true;bgMusic.volume=0.15}if(bgMusic.paused)bgMusic.play().catch(()=>{})}
@@ -316,13 +334,15 @@ function renderMap(){
 function visitNPC(id){
   const n=npcs[id];if(state.completed.has(id))return;
   state.current=id;
+  const q=n.questions[Math.floor(Math.random()*n.questions.length)];
+  state.currentQuestion=q;
   document.getElementById('quizNpcName').textContent=n.name+'的家';
   document.getElementById('npcImg').src=n.img;
   document.getElementById('dialogueBox').innerHTML=n.dialogue;
-  document.getElementById('questionText').textContent=n.question;
+  document.getElementById('questionText').textContent=q.q;
   const grid=document.getElementById('optionsList');
   grid.innerHTML='';
-  n.options.forEach((o,i)=>{
+  q.opts.forEach((o,i)=>{
     const b=document.createElement('button');
     b.className='opt-btn';
     b.innerHTML=`<span class="opt-letter">${o.l}</span><span>${o.t}</span>`;
@@ -335,21 +355,24 @@ function visitNPC(id){
 
 function selectAnswer(idx,n){
   playAudio('答题音频.mp3');
+  const q=state.currentQuestion;
   const btns=document.querySelectorAll('.opt-btn');
-  const correct=n.options[idx].c;
+  const correct=q.opts[idx].c;
   btns.forEach(b=>b.classList.add('disabled'));
-  n.options.forEach((o,i)=>{if(o.c)btns[i].classList.add('correct');else if(i===idx&&!correct)btns[i].classList.add('wrong')});
+  q.opts.forEach((o,i)=>{if(o.c)btns[i].classList.add('correct');else if(i===idx&&!correct)btns[i].classList.add('wrong')});
   if(!state.answered.has(n.id)){state.answered.add(n.id);if(correct)state.correct++}
   setTimeout(()=>showFeedback(correct,n),800);
 }
 
 function showFeedback(ok,n){
   playAudio(n.audio_answer);
+  const q=state.currentQuestion;
+  state.usedKnowledge.push(q.k);
   const o=document.getElementById('feedbackOverlay'),c=document.getElementById('feedbackCard');
   c.innerHTML=`<div class="fb-icon">${ok?'✅':'❌'}</div>
     <div class="fb-title ${ok?'ok':'ng'}">${ok?'回答正确！':'回答错误'}</div>
-    <div class="fb-knowledge">${n.knowledge}</div>
-    <div class="fb-reply">💬 ${n.reply}</div>
+    <div class="fb-knowledge">${q.k}</div>
+    <div class="fb-reply">💬 ${q.r}</div>
     <button class="btn btn-success" onclick="confirmFeedback(${n.id})">返回小镇地图</button>`;
   o.classList.add('show');
 }
@@ -366,11 +389,11 @@ function backToMap(){playAudio(null);showPage('map');renderMap()}
 function showDone(){
   playAudio('胜利音频.mp3');
   document.getElementById('statCorrect').textContent=state.correct;
-  document.getElementById('knowledgeList').innerHTML=npcs.map(n=>`<div class="summary-item"><span class="summary-dot">✦</span><span>${n.knowledge}</span></div>`).join('');
+  document.getElementById('knowledgeList').innerHTML=state.usedKnowledge.map(k=>`<div class="summary-item"><span class="summary-dot">✦</span><span>${k}</span></div>`).join('');
   showPage('done');
 }
 
-function restartGame(){state={completed:new Set,current:null,correct:0,answered:new Set};showPage('home')}
+function restartGame(){state={completed:new Set,current:null,correct:0,answered:new Set,currentQuestion:null,usedKnowledge:[]};showPage('home')}
 ensureBgMusic();
 document.addEventListener('click',function once(){if(clickCtx&&clickCtx.state==='suspended')clickCtx.resume();if(bgMusic&&bgMusic.paused){bgMusic.play().catch(()=>{})}},{once:true});
 </script>
